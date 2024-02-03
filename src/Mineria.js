@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faSave } from '@fortawesome/free-solid-svg-icons';
+
 import staticData from './data';
 import Swal from 'sweetalert2';
 
@@ -221,11 +220,9 @@ SAGE_MINING_RESOURCES=${script.SAGE_MINING_RESOURCES}
               style={{ fontSize: '14px', overflowY: 'auto'}} 
             />
             <button className="btn btn-primary" onClick={copyToClipboard}>
-              <FontAwesomeIcon icon={faCopy} /> Copiar
+               Copiar
             </button>
-            <button className="btn btn-primary ms-2" onClick={saveToFile}>
-              <FontAwesomeIcon icon={faSave} /> Guardar
-            </button>
+           
           </div>
           )}
       </div>
