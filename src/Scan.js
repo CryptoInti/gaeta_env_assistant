@@ -15,13 +15,12 @@ const Scan = ({ title, content }) => {
   const [generatedScript, setGeneratedScript] = useState('');
   const [targetSector, setTargetSector] = useState('');
   const [moveOnSuccess, setMoveOnSuccess] = useState(true);
+  const [chargeSector, setChargeSector] = useState(staticData[0].sector_name);
   
   const addFleetInput = () => {
     if (staticData && staticData.length > 0) {
       const newFleet = {
         name: `FLOTA_${fleetInputs.length + 1}`,
-        sector: staticData[0]['sector_name'], // Asegúrate de que staticData2 tenga datos
-        move_on_success: "true",
         inputValue: '',
       };
       setFleetInputs([...fleetInputs, newFleet]);
@@ -51,39 +50,39 @@ const Scan = ({ title, content }) => {
     if (fleetInputs.length > 0) {
       const script = fleetInputs.reduce(
         (acc, fleet, index) => {
-          const sectorData = staticData.find(
-            (row) => row['sector_name'] === fleet.sector
-            );
           
-          if (sectorData) {
-            acc.SAGE_SCAN_STARBASE += `${staticData.find(row => row['sector_name'] === fleet.sector)['sector_account']}${index < fleetInputs.length - 1 ? ',' : ''}`;
+
             acc.SAGE_SCAN_FLEET += `${fleet.inputValue}${index < fleetInputs.length - 1 ? ',' : ''}`;
 
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: `No hay sector seleccionado para flota ${fleet.name}`,
-            });
-            console.error(`No hay datos de sector disponibles para ${fleet.name}`);
-            // Puedes mostrar un mensaje de error o simplemente ignorar esta flota
-            return false;
-          }
+//          } else {
+//            Swal.fire({
+//             icon: 'error',
+//              title: 'Error',
+//              text: `No hay sector seleccionado para flota ${fleet.name}`,
+//            });
+//            console.error(`No hay datos de sector disponibles para ${fleet.name}`);
+//            // Puedes mostrar un mensaje de error o simplemente ignorar esta flota
+//            return false;
+//          }
           
           return acc;
           
           
         },
         {
-          SAGE_SCAN_STARBASE: '',
+          
           SAGE_SCAN_FLEET: '',
 
         }
       );
 
+      const sectorData = staticData.find(
+        (row) => row['sector_name'] === chargeSector
+        )['sector_account'];
+      
       const finalScript = `
 SAGE_SCAN_ENABLED=true
-SAGE_SCAN_STARBASE=${script.SAGE_SCAN_STARBASE}
+SAGE_SCAN_STARBASE=${sectorData}
 SAGE_SCAN_TARGET_SECTOR=${targetSector}
 SAGE_SCAN_FLEET=${script.SAGE_SCAN_FLEET}
 SAGE_SCAN_MOVE_ON_SUCCESS=${moveOnSuccess}
@@ -167,6 +166,24 @@ SAGE_SCAN_MOVE_ON_SUCCESS=${moveOnSuccess}
         setMoveOnSuccess(e.target.checked, 'force_sub_warp')
       }
               />
+                  <select
+                className="form-select me-2 mb-2"
+                value={chargeSector}
+                onChange={(e) =>
+        setChargeSector(e.target.value)
+      }
+                >
+                <option value="">Selecciona un sector</option>
+                {staticData.map((row) => (
+                  <option
+                    key={row['sector_name'] + ' - ' + row['resource_name']}
+                    value={row['sector_name']}
+                    >
+                    {row['sector_name']}
+                  </option>
+                  ))}
+              </select>
+                
             </div>
 
           </div>
@@ -205,30 +222,7 @@ SAGE_SCAN_MOVE_ON_SUCCESS=${moveOnSuccess}
                       />
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">StarBase to charge:</span>
-                      </div>
-                      <select
-                  className="form-select me-2 mb-2"
-                  value={fleet.sector}
-                  onChange={(e) =>
-        handleFlotaChange(fleet.name, e.target.value, 'sector')
-      }
-                  >
-                  <option value="">Selecciona un sector</option>
-                  {staticData.map((row) => (
-                    <option
-                      key={row['sector_name'] + ' - ' + row['resource_name']}
-                      value={row['sector_name']}
-                      >
-                      {row['sector_name']}
-                    </option>
-                    ))}
-                      </select>
-                    </div>
-                  </div>
+                  
                   <div className="col col-lg-2">
                     <button
                       className="btn btn-danger btn-sm"
