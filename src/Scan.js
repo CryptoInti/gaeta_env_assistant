@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faSave } from '@fortawesome/free-solid-svg-icons';
+
 import staticData from './data';
 import Swal from 'sweetalert2';
 
@@ -271,7 +270,7 @@ SAGE_SCAN_MOVE_ON_SUCCESS=${moveOnSuccess}
               style={{ fontSize: '14px', overflowY: 'auto'}} 
             />
             <button className="btn btn-primary" onClick={copyToClipboard}>
-              <FontAwesomeIcon icon={faCopy} /> Copiar
+               Copiar
             </button>
           </div>
           )}
